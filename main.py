@@ -1,5 +1,5 @@
-from telegram import ForceReply, Update
-from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram import ForceReply, Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters, CallbackQueryHandler
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -10,7 +10,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    helptext = f'Данный бот поможет вам найти расшифровку аббревиатур английского языка.\nЧтобы найти аббревиатуру введите её боту и он попробует её найти.'
+    helptext = f'Данный бот поможет вам найти расшифровку аббревиатур английского языка.\nЧтобы найти аббревиатуру введите её боту и он попробует её найти. \
+    Чтобы вывести все аббревиатуры введите /all.'
     await update.message.reply_text(helptext)
 
 
@@ -88,17 +89,19 @@ def findcorrelations(abv, messg):   # поиск похожих аббревиа
 def main() -> None:
     """Start the bot."""
     # Create the Application and pass it your bot's token.
-    application = Application.builder().token("6266082698:AAGpswBIwmDH9T_Nk32ih0b7RXGH4jdqpE8").build()
+    app = Application.builder().token("6266082698:AAGpswBIwmDH9T_Nk32ih0b7RXGH4jdqpE8").build()
 
     # on different commands - answer in Telegram
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler('all', send_all_abbv))
+    app.add_handler(CallbackQueryHandler(button_clicked))
 
     # on non command i.e message - echo the message on Telegram
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, returnabbrev))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, returnabbrev))
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
 if __name__ == "__main__":
