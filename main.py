@@ -89,7 +89,7 @@ def findcorrelations(abv, messg):   # поиск похожих аббревиа
 def main() -> None:
     """Start the bot."""
     # Create the Application and pass it your bot's token.
-    app = Application.builder().token("6266082698:AAGpswBIwmDH9T_Nk32ih0b7RXGH4jdqpE8").build()
+    app = Application.builder().token("").build()
 
     # on different commands - answer in Telegram
     app.add_handler(CommandHandler("start", start))
